@@ -10,10 +10,10 @@
 ############################
 
 # Name of website
-title: tetropirenna's Blog
+title: madt1m org notes
 
 # Your name to show in the footer
-author: Pietro Tirenna
+author: Pietro T
 
 ###############################################
 # --- List of links in the navigation bar --- #
@@ -28,7 +28,7 @@ navbar-links:
 
 # Image to show in the navigation bar - works best with a square image
 # Remove this parameter if you don't want an image in the navbar
-avatar: "/assets/img/logo.jpeg"
+avatar: "/assets/img/logo.png"
 
 # By default, the image is cut into a circle. You can disable this behaviour by setting 'round-avatar: false'
 round-avatar: true
@@ -47,8 +47,8 @@ round-avatar: true
 social-network-links:
   email: "ptirennaDOTpmDOTme"
   rss: true  # remove this line if you don't want to show an RSS link at the bottom
-  github: tetropirenna
-  twitter: tetropirenna
+  github: madt1m
+  twitter: madt1m_
 #  medium: yourname
 #  reddit: yourname
 #  linkedin: daattali
@@ -110,7 +110,7 @@ edit_page_button: true
 navbar-var-length: false
 
 # The keywords to associate with your website, for SEO purposes
-#keywords: "my,list,of,keywords"
+keywords: "hacking,redteam,security,computer science, computer engineering"
 
 ######################################
 # --- Colours / background image --- #
