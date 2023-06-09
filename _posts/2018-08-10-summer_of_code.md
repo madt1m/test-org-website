@@ -102,4 +102,4 @@ my skills and knowledge. I have found an awesome environment in mitmproxy, and w
 the GSoC period ends, my journey with this organization does not. Enjoy!
 
 
-_Pietro Francesco Tirenna - madt1m_
+_Pietro - madt1m_
