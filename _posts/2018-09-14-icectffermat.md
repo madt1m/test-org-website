@@ -12,8 +12,8 @@ The challenge description gives us some hint about Format Strings attacks, and t
 ## Some Analysis
 Which kind of beast are we facing? A run of `checksec` and `file`:
 
-![AltText](/assets/images/icectffermat_1.JPG)
-![AltText](/assets/images/icectffermat_2.JPG)
+![AltText](/assets/img/icectffermat_1.JPG)
+![AltText](/assets/img/icectffermat_2.JPG)
 
 With PIE disabled, and the binary statically linked, we basically have
 every address we desire carved in a stone. Running multiple times the binary in target machine, with gdb `set disable-randomization off`, also confirms that stack addresses are stable during different runs.
@@ -180,7 +180,7 @@ To keep things short, I'll explain here how I managed to obtain the above, toget
 Let's see how to use our format string vulnerability.
 This is a snapshot of memory layout when hitting the vulnerable `printf()`:
 
-![AltText](/assets/images/icectffermat_3.JPG)
+![AltText](/assets/img/icectffermat_3.JPG)
 
 Looking at output from `bt` and `stack` we can examine the how stack frames where formed.
 We are in function `payload()`, and there on the stack we have:
@@ -212,7 +212,7 @@ The trick to trigger stack pivoting is using the two `leave` instruction in `dis
 
 I slightly modified this approach because of these instructions in `main`:
 
-![AltText](/assets/images/icectffermat_4.JPG)
+![AltText](/assets/img/icectffermat_4.JPG)
 
 Following `leave`,
 the value in memory pointed by `ecx - 4` is moved into `esp`. Luckily, we can control the content of `ecx`, since it is loaded in:

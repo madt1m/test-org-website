@@ -14,7 +14,7 @@ A good run of reversing with IDA and some googling made me discover a whole worl
 
 And _twitter_ is just that, a Chip-8 interpreter written in c++ written by some passionate nerd :)
 
-![AltText1](/assets/images/icectftwitter_1.JPG)
+![AltText1](/assets/img/icectftwitter_1.JPG)
 
 So, to properly follow and reproduce the writeup, I'd encourage you to go and take a quick read of the [_Chip-8 Instruction Set_](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) -- I'll refer to that in what follows.
 
@@ -22,8 +22,8 @@ Moreover, to successfully write my custom ROM and exploit the vulnerability I us
 
 ## Binary Analysis
 
-![AltText1](/assets/images/icectftwitter_2.JPG)
-![AltText1](/assets/images/icectftwitter_3.JPG)
+![AltText1](/assets/img/icectftwitter_2.JPG)
+![AltText1](/assets/img/icectftwitter_3.JPG)
 
 The binary is NX, so we need to use some ROP technique to exploit it.
 With PIE option, dynamic linking, and ASLR, not a single address in memory will be loaded in a deterministic fashion. We will definitely need some leak.
@@ -59,7 +59,7 @@ Standing to the [Chip8 Instruction Set](http://devernay.free.fr/hacks/chip8/C8TE
 
 `./chipper overflow.rom overflow.asm`
 
-![AltText1](/assets/images/icectftwitter_4.JPG)
+![AltText1](/assets/img/icectftwitter_4.JPG)
 
 
 We basically have a **buffer overflow** here, where the buffer is represented by the 4KB allocated to the environment. Moreover, we can issue **read and write operations from arbitrary areas of memory** up to 2^16 bytes starting from the buffer.
@@ -70,7 +70,7 @@ We basically have a **buffer overflow** here, where the buffer is represented by
 Again, we need a leak.
 But really, when you have the chance to write and read an arbitrary number of times to/from memory, you will pretty much always find something to make good use of.
 
-![AltText1](/assets/images/icectftwitter_5.JPG)
+![AltText1](/assets/img/icectftwitter_5.JPG)
 
 My strategy here was:
 - Examine saved return addresses with _backtrace_;
@@ -103,4 +103,4 @@ But nevertheless, finding and exploiting the vulnerability on such a nerdy archi
 
 You can inspect the final asm code [HERE!](https://github.com/pwnthemole/ctfs/blob/master/icectf2018/twitter/REMOTEPWN.asm)
 
-![AltText1](/assets/images/icectftwitter_6.JPG)
+![AltText1](/assets/img/icectftwitter_6.JPG)
