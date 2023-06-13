@@ -1,0 +1,181 @@
+---
+layout: post
+title: "This post is actually an Org-mode note"
+permalink: /:title/
+tags: [emacs, org-mode]
+---
+
+<div id="outline-container-orga90ca7a" class="outline-2">
+<h2 id="orga90ca7a">Incipit</h2>
+<div class="outline-text-2" id="text-orga90ca7a">
+<p>
+I&rsquo;ve very recently decided to start blogging &#x2013; I feel like gathering knowledge is more fun and useful when I find the time
+to order thoughts and write things down somewhere. And if this can be useful for someone else, all the better.
+</p>
+
+<p>
+However, I&rsquo;m not (yet?) an adept of the dark arts of blogging, and I needed something fast and fully integrated with my workflow
+to convince myself. Therefore, after a short test with some of the popular WYSIWYG editors online, I decided to integrate my lately
+most beloved software, Emacs, with my blogging intentions.
+</p>
+
+<p>
+And to headstart this blog, what better way to briefly explain the setup of the blog itself?
+</p>
+
+<p>
+Enter org-mode to HTML to jekyll to Github Pages.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgac4b372" class="outline-2">
+<h2 id="orgac4b372">Ingredients</h2>
+<div class="outline-text-2" id="text-orgac4b372">
+</div>
+<div id="outline-container-org16afdb8" class="outline-3">
+<h3 id="org16afdb8">Org mode</h3>
+<div class="outline-text-3" id="text-org16afdb8">
+<p>
+For starters, I need to write Org documents. Emacs (<a href="https://www.gnu.org/software/emacs/">https://www.gnu.org/software/emacs/</a>) is my shop.
+I am using an Emacs distribution (<a href="https://github.com/doomemacs/doomemacs">https://github.com/doomemacs/doomemacs</a>), which sets up really nice defaults and provides
+a sensible and easy to hack configuration.
+For all the purist out there&#x2026;please bear with me but I can&rsquo;t stand purity: I use Emacs with vim keybindings, and right now
+Emacs is running within WSL2 (that&rsquo;s a story for another post) :D
+</p>
+
+<p>
+For readers not used to it, org-mode is a &ldquo;highly flexible plain text file format&rdquo; that can be used to manage notes, journals, agendas,
+TODOs, full-fledged calendars, literal programming (jupyter notebooks, I&rsquo;m sorry about that) and (probably) much more. I highly suggest
+you to check it out and play with it.
+</p>
+
+<p>
+Feel free to check the doc (<a href="https://orgmode.org/">https://orgmode.org/</a>), or, better, just <code>describe-mode</code> inside Emacs.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3bae3dc" class="outline-3">
+<h3 id="org3bae3dc">HTML (via org-publish)</h3>
+<div class="outline-text-3" id="text-org3bae3dc">
+<p>
+In order to ship our blogposts using Jekyll, I need to translate our Org documents into HTML.
+</p>
+
+<p>
+One of the many features of org-mode is being able to export documents in various formats,
+among which we find - exactly - HTML. Check <a href="https://orgmode.org/manual/Publishing.html">https://orgmode.org/manual/Publishing.html</a> for more informations.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0e226a9" class="outline-3">
+<h3 id="org0e226a9">Jekyll AKA the Generator</h3>
+<div class="outline-text-3" id="text-org0e226a9">
+<p>
+I&rsquo;m letting Jekyll (<a href="https://jekyllrb.com/">https://jekyllrb.com/</a>) the burden to produce the website.
+For this blog, I&rsquo;m currently using the Beautiful Jekyll (<a href="https://beautifuljekyll.com/">https://beautifuljekyll.com/</a>) template, which
+to me seems to touch the right point between minimalism and useful features.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org528dbc0" class="outline-3">
+<h3 id="org528dbc0">Github Pages</h3>
+<div class="outline-text-3" id="text-org528dbc0">
+<p>
+Just Github Pages (<a href="https://pages.github.com/">https://pages.github.com/</a>), a simple and effective way to host a website with built-in versioning and deploy.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd98f5cc" class="outline-2">
+<h2 id="orgd98f5cc">The Workflow&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h2>
+<div class="outline-text-2" id="text-orgd98f5cc">
+<p>
+I&rsquo;ve first setup my personal Github Pages repository pointing to the Beautiful Jekyll template. The steps here are quite simple and already exhaustively documented
+in the repository documentation at <a href="https://github.com/daattali/beautiful-jekyll#build-your-website-in-3-steps">https://github.com/daattali/beautiful-jekyll#build-your-website-in-3-steps</a>, so I&rsquo;m not going to go into any more details about this.
+</p>
+
+<p>
+Now we get to the fun part: connecting the org-mode posts to the website.
+</p>
+
+<p>
+Beautiful Jekyll (and, more generically, Jekyll) expect posts in the <code>_posts</code> directory. Typically these posts are written in Markdown and later converted by Jekyll, but
+nothing prevents us to put plain HTML files in there for Jekyll to process and serve in our website.
+</p>
+
+<p>
+Therefore, I have created a <code>blog/</code> directory in my Org project, and wrote the following config lines in <code>config.el</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Org-publish nitty-gritties to make it work with Jekyll and Github Pages</span>
+        <span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">org-publish-project-alist</span>
+        <span style="color: #51afef;">'</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"blog"</span>
+                <span style="color: #c678dd;">:base-directory</span> <span style="color: #98be65;">"~/Dropbox/org/blog"</span>
+                <span style="color: #c678dd;">:base-extension</span> <span style="color: #98be65;">"org"</span>
+                <span style="color: #c678dd;">:publishing-directory</span> <span style="color: #98be65;">"~/dev/madt1m.github.io/_posts/"</span>
+                <span style="color: #c678dd;">:recursive</span> t
+                <span style="color: #c678dd;">:publishing-function</span> org-html-publish-to-html
+                <span style="color: #c678dd;">:headline-levels</span> <span style="color: #da8548; font-weight: bold;">4</span>
+                <span style="color: #c678dd;">:html-extension</span> <span style="color: #98be65;">"html"</span>
+                <span style="color: #c678dd;">:body-only</span> t
+                <span style="color: #98be65;">)</span>
+          <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"images"</span>
+                <span style="color: #c678dd;">:base-directory</span> <span style="color: #98be65;">"~/Dropbox/org/blog/imgs"</span>
+                <span style="color: #c678dd;">:base-extension</span> <span style="color: #98be65;">"jpg</span><span style="color: #51afef; font-weight: bold;">\\</span><span style="color: #51afef; font-weight: bold;">|</span><span style="color: #98be65;">gif</span><span style="color: #51afef; font-weight: bold;">\\</span><span style="color: #51afef; font-weight: bold;">|</span><span style="color: #98be65;">png"</span>
+                <span style="color: #c678dd;">:publishing-directory</span> <span style="color: #98be65;">"~/dev/madt1m.github.io/assets/img"</span>
+                <span style="color: #c678dd;">:recursive</span> t
+                <span style="color: #c678dd;">:publishing-function</span> org-publish-attachment
+                <span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+The code here is quite simple. I am setting two different org-publish entries, <code>blog</code> and <code>images</code>, respectively
+for my blogposts and the assets. Each entry is configured with the source and destination directory, the respective
+function to publish (==convert or just move) the files, and the extension needed to match the files. In the HTML configuration,
+only the body is exported, because Jekyll will take care of the header.
+</p>
+
+<p>
+There are two more pieces needed to support conversion. First, the name of the exported HTML document will be the name of the Org document,
+therefore the latter needs to be named with the correct format (YYYY-MM-DD-title.org). Second, I need to include a YAML frontmatter on every
+post for the Jekyll conversion to work fine. So, at the beginning of every org document in the blog directory, I start things with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #83898d;">#+OPTIONS: toc:nil num:nil</span>
+<span style="color: #5B6268; background-color: #23272e;">#+BEGIN_EXPORT html</span>
+<span style="background-color: #23272e;">---</span>
+<span style="background-color: #23272e;">layout: post</span>
+<span style="background-color: #23272e;">title: "This post is actually an Org-mode note"</span>
+<span style="background-color: #23272e;">permalink: /:title/</span>
+<span style="background-color: #23272e;">tags: [emacs, org-mode]</span>
+<span style="background-color: #23272e;">---</span>
+<span style="color: #5B6268; background-color: #23272e;">#+END_EXPORT</span>
+</pre>
+</div>
+
+<p>
+Of course, this snippet was copied right out of this very post.
+</p>
+
+<p>
+Now, to export this post, I&rsquo;ll only need to run the publishing function which will produce the file right inside
+my website repository. Publishing it to the internet is then just a commit &amp; push away!
+</p>
+
+<p>
+One last thing &#x2013; let&rsquo;s add an image to test if everything work as expected:
+</p>
+
+<p>
+<a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fgetyarn.io%2Fyarn-clip%2F91273643-8c0b-46fd-a208-b6fc3496e3ad&amp;psig=AOvVaw3AezFaaQJmiUWl-CsbEX3J&amp;ust=1686784350383000&amp;source=images&amp;cd=vfe&amp;ved=0CBEQjRxqFwoTCIDktbawwf8CFQAAAAAdAAAAABAE">https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fgetyarn.io%2Fyarn-clip%2F91273643-8c0b-46fd-a208-b6fc3496e3ad&amp;psig=AOvVaw3AezFaaQJmiUWl-CsbEX3J&amp;ust=1686784350383000&amp;source=images&amp;cd=vfe&amp;ved=0CBEQjRxqFwoTCIDktbawwf8CFQAAAAAdAAAAABAE</a>
+</p>
+</div>
+</div>
