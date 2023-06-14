@@ -2,7 +2,7 @@
 layout: post
 title: GSoC 2018 - Final Report
 description: My last report for this adventure :)
-keywords: "gsoc, mitmproxy"
+tags: "gsoc, mitmproxy"
 ---
 
 ## A Summer of Code

@@ -1,7 +1,5 @@
 ---
-layout: post
 title: "This post is actually an Org-mode note"
-permalink: /:title/
 tags: [emacs, org-mode]
 ---
 
@@ -20,11 +18,7 @@ most beloved software, Emacs, with my blogging intentions.
 </p>
 
 <p>
-And to headstart this blog, what better way to briefly explain the setup of the blog itself?
-</p>
-
-<p>
-Enter org-mode to HTML to jekyll to Github Pages.
+And to headstart this blog, what better way to briefly explain the setup of the blog itself? Enter org-mode to HTML to jekyll to Github Pages.
 </p>
 </div>
 </div>
@@ -37,8 +31,8 @@ Enter org-mode to HTML to jekyll to Github Pages.
 <h3 id="org16afdb8">Org mode</h3>
 <div class="outline-text-3" id="text-org16afdb8">
 <p>
-For starters, I need to write Org documents. Emacs (<a href="https://www.gnu.org/software/emacs/">https://www.gnu.org/software/emacs/</a>) is my shop.
-I am using an Emacs distribution (<a href="https://github.com/doomemacs/doomemacs">https://github.com/doomemacs/doomemacs</a>), which sets up really nice defaults and provides
+For starters, I need to write Org documents. <a href="https://www.gnu.org/software/emacs/">Emacs</a> is my shop for this!
+I am using an Emacs distribution, <a href="https://github.com/doomemacs/doomemacs">Doom Emacs</a>, which sets up really nice defaults and provides
 a sensible and easy to hack configuration.
 For all the purist out there&#x2026;please bear with me but I can&rsquo;t stand purity: I use Emacs with vim keybindings, and right now
 Emacs is running within WSL2 (that&rsquo;s a story for another post) :D
@@ -46,12 +40,12 @@ Emacs is running within WSL2 (that&rsquo;s a story for another post) :D
 
 <p>
 For readers not used to it, org-mode is a &ldquo;highly flexible plain text file format&rdquo; that can be used to manage notes, journals, agendas,
-TODOs, full-fledged calendars, literal programming (jupyter notebooks, I&rsquo;m sorry about that) and (probably) much more. I highly suggest
+TODOs, full-fledged calendars, literal programming (jupyter notebooks, I&rsquo;m sorry about that) and probably much more. I highly suggest
 you to check it out and play with it.
 </p>
 
 <p>
-Feel free to check the doc (<a href="https://orgmode.org/">https://orgmode.org/</a>), or, better, just <code>describe-mode</code> inside Emacs.
+Feel free to check the <a href="https://orgmode.org/">docs</a>, or, better, just <code>describe-mode</code> inside Emacs.
 </p>
 </div>
 </div>
@@ -74,8 +68,8 @@ among which we find - exactly - HTML. Check <a href="https://orgmode.org/manual/
 <h3 id="org0e226a9">Jekyll AKA the Generator</h3>
 <div class="outline-text-3" id="text-org0e226a9">
 <p>
-I&rsquo;m letting Jekyll (<a href="https://jekyllrb.com/">https://jekyllrb.com/</a>) the burden to produce the website.
-For this blog, I&rsquo;m currently using the Beautiful Jekyll (<a href="https://beautifuljekyll.com/">https://beautifuljekyll.com/</a>) template, which
+I&rsquo;m leaving to <a href="https://jekyllrb.com/">Jekyll</a> the burden to produce the website.
+For this blog, I&rsquo;m currently using the <a href="https://beautifuljekyll.com/">Beautiful Jekyll</a> template, which
 to me seems to touch the right point between minimalism and useful features.
 </p>
 </div>
@@ -85,14 +79,14 @@ to me seems to touch the right point between minimalism and useful features.
 <h3 id="org528dbc0">Github Pages</h3>
 <div class="outline-text-3" id="text-org528dbc0">
 <p>
-Just Github Pages (<a href="https://pages.github.com/">https://pages.github.com/</a>), a simple and effective way to host a website with built-in versioning and deploy.
+Just good old <a href="https://pages.github.com/">Github Pages</a>, a simple and effective way to host a website with built-in versioning and deploy.
 </p>
 </div>
 </div>
 </div>
 
 <div id="outline-container-orgd98f5cc" class="outline-2">
-<h2 id="orgd98f5cc">The Workflow&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h2>
+<h2 id="orgd98f5cc">The Workflow</h2>
 <div class="outline-text-2" id="text-orgd98f5cc">
 <p>
 I&rsquo;ve first setup my personal Github Pages repository pointing to the Beautiful Jekyll template. The steps here are quite simple and already exhaustively documented
@@ -115,23 +109,35 @@ Therefore, I have created a <code>blog/</code> directory in my Org project, and 
 <div class="org-src-container">
 <pre class="src src-elisp">        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Org-publish nitty-gritties to make it work with Jekyll and Github Pages</span>
         <span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> <span style="color: #dcaeea;">org-publish-project-alist</span>
-        <span style="color: #51afef;">'</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"blog"</span>
+        <span style="color: #51afef;">'</span><span style="color: #c678dd;">(</span>
+          <span style="color: #98be65;">(</span><span style="color: #98be65;">"blog"</span>
+                <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Path to org files.</span>
                 <span style="color: #c678dd;">:base-directory</span> <span style="color: #98be65;">"~/Dropbox/org/blog"</span>
                 <span style="color: #c678dd;">:base-extension</span> <span style="color: #98be65;">"org"</span>
+
+                <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Path to Jekyll Posts</span>
                 <span style="color: #c678dd;">:publishing-directory</span> <span style="color: #98be65;">"~/dev/madt1m.github.io/_posts/"</span>
                 <span style="color: #c678dd;">:recursive</span> t
                 <span style="color: #c678dd;">:publishing-function</span> org-html-publish-to-html
                 <span style="color: #c678dd;">:headline-levels</span> <span style="color: #da8548; font-weight: bold;">4</span>
                 <span style="color: #c678dd;">:html-extension</span> <span style="color: #98be65;">"html"</span>
+                <span style="color: #c678dd;">:section-numbers</span> nil
+                <span style="color: #c678dd;">:with-toc</span> nil
+                <span style="color: #c678dd;">:auto-index</span> nil
+                <span style="color: #c678dd;">:auto-preamble</span> nil
                 <span style="color: #c678dd;">:body-only</span> t
+                <span style="color: #c678dd;">:auto-postamble</span> nil
                 <span style="color: #98be65;">)</span>
-          <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"images"</span>
+          <span style="color: #98be65;">(</span><span style="color: #98be65;">"images"</span>
                 <span style="color: #c678dd;">:base-directory</span> <span style="color: #98be65;">"~/Dropbox/org/blog/imgs"</span>
                 <span style="color: #c678dd;">:base-extension</span> <span style="color: #98be65;">"jpg</span><span style="color: #51afef; font-weight: bold;">\\</span><span style="color: #51afef; font-weight: bold;">|</span><span style="color: #98be65;">gif</span><span style="color: #51afef; font-weight: bold;">\\</span><span style="color: #51afef; font-weight: bold;">|</span><span style="color: #98be65;">png"</span>
                 <span style="color: #c678dd;">:publishing-directory</span> <span style="color: #98be65;">"~/dev/madt1m.github.io/assets/img"</span>
                 <span style="color: #c678dd;">:recursive</span> t
                 <span style="color: #c678dd;">:publishing-function</span> org-publish-attachment
-                <span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+                <span style="color: #98be65;">)</span>
+          <span style="color: #98be65;">(</span><span style="color: #98be65;">"website"</span> <span style="color: #c678dd;">:components</span> <span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"blog"</span> <span style="color: #98be65;">"images"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+          <span style="color: #c678dd;">)</span>
+        <span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -149,33 +155,40 @@ post for the Jekyll conversion to work fine. So, at the beginning of every org d
 </p>
 
 <div class="org-src-container">
-<pre class="src src-org"><span style="color: #83898d;">#+OPTIONS: toc:nil num:nil</span>
-<span style="color: #5B6268; background-color: #23272e;">#+BEGIN_EXPORT html</span>
-<span style="background-color: #23272e;">---</span>
-<span style="background-color: #23272e;">layout: post</span>
-<span style="background-color: #23272e;">title: "This post is actually an Org-mode note"</span>
-<span style="background-color: #23272e;">permalink: /:title/</span>
-<span style="background-color: #23272e;">tags: [emacs, org-mode]</span>
-<span style="background-color: #23272e;">---</span>
-<span style="color: #5B6268; background-color: #23272e;">#+END_EXPORT</span>
+<pre class="src src-nil">#+BEGIN_EXPORT html
+---
+title: "This post is actually an Org-mode note"
+tags: [emacs, org-mode]
+---
+#+END_EXPORT
+
 </pre>
 </div>
 
 <p>
-Of course, this snippet was copied right out of this very post.
+One last bits: images. With my org-publish configs, those are correctly moved to the the <code>assets/img</code> directory in my website.
+However, the relative links will be messed up when publishing! This can be solved with some simple org magic:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #83898d;">#+ATTR_HTML: :src /images/a.png</span>
+<span style="color: #ECBE7B; font-weight: bold; text-decoration: underline;"><a href="file:./images/a.png">file:./images/a.png</a></span>
+</pre>
+</div>
+
+<p>
+To make sure the <code>src</code> attribute of the exported image contains the right path.
 </p>
 
 <p>
-Now, to export this post, I&rsquo;ll only need to run the publishing function which will produce the file right inside
+Now, to export this post, I&rsquo;ll only need to run the <code>org-publish-project</code> function which will produce the file right inside
 my website repository. Publishing it to the internet is then just a commit &amp; push away!
 </p>
 
-<p>
-One last thing &#x2013; let&rsquo;s add an image to test if everything work as expected:
-</p>
 
-<p>
-<a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fgetyarn.io%2Fyarn-clip%2F91273643-8c0b-46fd-a208-b6fc3496e3ad&amp;psig=AOvVaw3AezFaaQJmiUWl-CsbEX3J&amp;ust=1686784350383000&amp;source=images&amp;cd=vfe&amp;ved=0CBEQjRxqFwoTCIDktbawwf8CFQAAAAAdAAAAABAE">https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fgetyarn.io%2Fyarn-clip%2F91273643-8c0b-46fd-a208-b6fc3496e3ad&amp;psig=AOvVaw3AezFaaQJmiUWl-CsbEX3J&amp;ust=1686784350383000&amp;source=images&amp;cd=vfe&amp;ved=0CBEQjRxqFwoTCIDktbawwf8CFQAAAAAdAAAAABAE</a>
+<div id="org26f50c7" class="figure">
+<p><img src="/assets/img/glory_glorzo.gif" alt="glory_glorzo.gif" />
 </p>
+</div>
 </div>
 </div>

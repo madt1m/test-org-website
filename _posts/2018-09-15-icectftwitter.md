@@ -2,7 +2,7 @@
 layout: post
 title: IceCTF 2018 - Twitter Writeup
 description: my writeup for Twitter PWN challenge @ IceCTF2018.
-keywords: "pwn, ctf"
+tags: "pwn, ctf"
 ---
 
 ## Tweeting Invaders

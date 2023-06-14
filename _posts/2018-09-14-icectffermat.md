@@ -2,7 +2,7 @@
 layout: post
 title: IceCTF 2018 - Fermat string Writeup
 description: My writeup for PWN Fermat String challenge @ IceCTF2018.
-keywords: "pwn, icectf2018"
+tags: "pwn, icectf2018"
 ---
 
 # Does size matter?
