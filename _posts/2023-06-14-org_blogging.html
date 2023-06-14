@@ -1,5 +1,5 @@
 ---
-title: "This post is actually an Org-mode note"
+title: "This blog is actually an Org-mode project"
 tags: [emacs, org-mode]
 ---
 
@@ -59,7 +59,7 @@ In order to ship our blogposts using Jekyll, I need to translate our Org documen
 
 <p>
 One of the many features of org-mode is being able to export documents in various formats,
-among which we find - exactly - HTML. Check <a href="https://orgmode.org/manual/Publishing.html">https://orgmode.org/manual/Publishing.html</a> for more informations.
+among which we find - exactly - HTML. Check <a href="https://orgmode.org/manual/Publishing.html">org-publish docs</a> for more informations.
 </p>
 </div>
 </div>
@@ -90,7 +90,7 @@ Just good old <a href="https://pages.github.com/">Github Pages</a>, a simple and
 <div class="outline-text-2" id="text-orgd98f5cc">
 <p>
 I&rsquo;ve first setup my personal Github Pages repository pointing to the Beautiful Jekyll template. The steps here are quite simple and already exhaustively documented
-in the repository documentation at <a href="https://github.com/daattali/beautiful-jekyll#build-your-website-in-3-steps">https://github.com/daattali/beautiful-jekyll#build-your-website-in-3-steps</a>, so I&rsquo;m not going to go into any more details about this.
+in the repository <a href="https://github.com/daattali/beautiful-jekyll#build-your-website-in-3-steps">documentation</a>, so I&rsquo;m not going to go into any more details about this.
 </p>
 
 <p>
@@ -150,7 +150,7 @@ only the body is exported, because Jekyll will take care of the header.
 
 <p>
 There are two more pieces needed to support conversion. First, the name of the exported HTML document will be the name of the Org document,
-therefore the latter needs to be named with the correct format (YYYY-MM-DD-title.org). Second, I need to include a YAML frontmatter on every
+therefore posts need to be named with the correct format (YYYY-MM-DD-title.org). Second, I need to include a YAML frontmatter on every
 post for the Jekyll conversion to work fine. So, at the beginning of every org document in the blog directory, I start things with:
 </p>
 
@@ -166,12 +166,16 @@ tags: [emacs, org-mode]
 </div>
 
 <p>
+(This seems a great reader exercise for an <code>org-capture</code> template)
+</p>
+
+<p>
 One last bits: images. With my org-publish configs, those are correctly moved to the the <code>assets/img</code> directory in my website.
 However, the relative links will be messed up when publishing! This can be solved with some simple org magic:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-org"><span style="color: #83898d;">#+ATTR_HTML: :src /images/a.png</span>
+<pre class="src src-org"><span style="color: #83898d;">#+ATTR_HTML: :src /assets/images/a.png</span>
 <span style="color: #ECBE7B; font-weight: bold; text-decoration: underline;"><a href="file:./images/a.png">file:./images/a.png</a></span>
 </pre>
 </div>
@@ -186,7 +190,7 @@ my website repository. Publishing it to the internet is then just a commit &amp;
 </p>
 
 
-<div id="org26f50c7" class="figure">
+<div id="orge3f6b16" class="figure">
 <p><img src="/assets/img/glory_glorzo.gif" alt="glory_glorzo.gif" />
 </p>
 </div>
